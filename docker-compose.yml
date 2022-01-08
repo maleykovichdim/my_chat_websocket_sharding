@@ -1,0 +1,113 @@
+version: '3.7'
+
+services:
+  chat:
+    build:
+      context: ./chat
+      dockerfile: Dockerfile
+    ports:
+     - "8086:8086"
+     - "33647:33647"
+    volumes:
+     - ./chat:/home/chat
+    networks:
+      - otus-network
+
+  shard1:
+    build:
+      context: alpha
+      dockerfile: Dockerfile
+    container_name: shard1
+    restart: "no"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: message
+    command: >
+      --sql-mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+      --general-log=ON
+      --log-queries-not-using-indexes=ON
+    networks:
+      - otus-network
+    ports:
+      - 3370:3306
+    volumes:
+      - ./alpha/data1:/var/lib/mysql
+
+  shard2:
+    build:
+      context: alpha
+      dockerfile: Dockerfile
+    container_name: shard2
+    restart: "no"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: message
+    command: >
+      --sql-mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+      --general-log=ON
+      --log-queries-not-using-indexes=ON
+    networks:
+      - otus-network
+    ports:
+      - 3371:3306
+    volumes:
+      - ./alpha/data2:/var/lib/mysql
+
+  shard3:
+    build:
+      context: alpha
+      dockerfile: Dockerfile
+    container_name: shard3
+    restart: "no"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: message
+    command: >
+      --sql-mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+      --general-log=ON
+      --log-queries-not-using-indexes=ON
+    networks:
+      - otus-network
+    ports:
+      - 3372:3306
+    volumes:
+      - ./alpha/data3:/var/lib/mysql
+
+  shard4:
+    build:
+      context: alpha
+      dockerfile: Dockerfile
+    container_name: shard4
+    restart: "no"
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: message
+    command: >
+      --sql-mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+      --general-log=ON
+      --log-queries-not-using-indexes=ON
+    networks:
+      - otus-network
+    ports:
+      - 3373:3306
+    volumes:
+      - ./alpha/data4:/var/lib/mysql
+
+
+volumes:
+  shard1:
+  shard2:
+  shard3:
+  shard4:
+
+networks:
+  otus-network:
+    external: true
